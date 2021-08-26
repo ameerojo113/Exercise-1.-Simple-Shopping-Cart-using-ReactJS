@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS v5.0.2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="containter">
+        <form>
+            <label for="title">Product Name</label>
+            <input type="text" name="ProductName" id="ProductName" placeholder="Product Name" required>
+            <label for="yr">Price</label>
+            <input type="number" name="Price" id="Price" placeholder="Price" required>
+            <label for="yr">Quantity</label>
+            <input type="number" name="qty" id="qty" placeholder="Quantity" required>
+            <button id="btn">Addutocart</button>
+            <button id="btnDisplay">Generate Product List</button>
+            <button id="btnReset">Check Out</button>
+
+            <div id="display">
+                <!-- Display JSON -->
+            </div>
+            <table id="displayProducts" style="width: 70%; border:solid 1px black">
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </table>
+            <p style="display: inline">Total: </p>
+            <p style="display: inline" id="totallify"></p>
+        </form>
+    </div>
+    <script>
+        let cartlist = [];
+        const addutocart = (ev) => {
+            ev.preventDefault();
+
+            let shoppingcart = {
+                id: Date.now(),
+                productName: document.getElementById('ProductName').value,
+                price: document.getElementById('Price').value,
+                quantity: document.getElementById('qty').value,
+            }
+            cartlist.push(shoppingcart);
+            document.querySelector('form').reset();
+            // console.table(cartlist);
+
+            // let displayMovie = document.querySelector('#display');
+            // displayMovie.innerHTML = JSON.stringify(cartlist, null, 2);
+
+            localStorage.setItem("cartlist", JSON.stringify(cartlist))
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            //Add review
+            document.getElementById('btn').addEventListener('click', addutocart);
+            //Display Reviews
+            document.getElementById('btnDisplay').addEventListener('click', displayProduct);
+
+            document.getElementById('btnReset').addEventListener('click', checkout);
+
+        })
+        function displayProduct(ev) {
+            ev.preventDefault();
+            let array1 = new Array();
+            array1 = JSON.parse(localStorage.getItem("cartlist"));
+            //alert(array1.length);
+
+            let table = document.getElementById("displayProducts");
+            let grantotal = document.getElementById("totallify");
+            let total = 0;
+            let row = table.insertRow();
+            let tdata1 = row.insertCell();
+            let tdata2 = row.insertCell();
+            let tdata3 = row.insertCell();
+            let tdata4 = row.insertCell();
+            let tdata5 = row.insertCell();
+            for (let i in array1) {
+
+                // for (let i in array1) {
+                //     let table = document.getElementById("cartlist");
+                //     let row = document.createElement("tr");
+                //     table.appendChild(row);
+                //     let tdata1 = document.createElement("td");
+                //     table.appendChild(tdata1);
+                //     let tdata2 = document.createElement("td");
+                //     table.appendChild(tdata2);
+                //     let tdata3 = document.createElement("td");
+                //     table.appendChild(tdata3);
+
+                tdata1.innerHTML = array1[i].id;
+                tdata2.innerHTML = array1[i].productName;
+                tdata3.innerHTML = array1[i].price;
+                tdata4.innerHTML = array1[i].quantity;
+                if (array1[i].quantity == 0) {
+                    tdata5.innerHTML = parseFloat(array1[i].price);
+                    tdata4.innerHTML = "1"
+                } else {
+                    tdata5.innerHTML = parseFloat(array1[i].price) * parseFloat(array1[i].quantity);
+                }
+                if (array1[i].quantity == 0) {
+                    grantotal.innerHTML = total += parseFloat(array1[i].price);
+                } else {
+                    grantotal.innerHTML = total += parseFloat(array1[i].price) * parseFloat(array1[i].quantity)
+                }
+                // let x = parseFloat(array1[i].price) * parseFloat(array1[i].quantity);
+                // tdata5.innerHTML = x;
+                // total = total + x;
+            }
+            // alert(total);
+            // console.log(array1);
+
+
+        }
+        function checkout(ev) {
+            localStorage.clear();
+            cartlist.length = 0;
+            ev.preventDefault();
+        }
+    </script>
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
